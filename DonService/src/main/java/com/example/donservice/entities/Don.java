@@ -28,21 +28,79 @@ public class Don {
     @Transient
     private Organisation organisation;
 
-    public User getUser() {
-        return user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+//
+//    public Organisation getOrganisation() {
+//        return organisation;
+//    }
+//
+//    public void setOrganisation(Organisation organisation) {
+//        this.organisation = organisation;
+//    }
+//
+////
+////     Getter and Setter methods for userId and organisationId
+//    public Long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        this.userId = userId;
+//    }
+//
+//    public Long getOrganisationId() {
+//        return organisationId;
+//    }
+//
+//    public void setOrganisationId(Long organisationId) {
+//        this.organisationId = organisationId;
+//    }
+//
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public Double getMontant() {
+//        return montant;
+//    }
+//
+//    public void setMontant(Double montant) {
+//        this.montant = montant;
+//    }
+//
+//    public LocalDate getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(LocalDate date) {
+//        this.date = date;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "Don{" +
+//                "id=" + id +
+//                ", userId=" + userId +
+//                ", organisationId=" + organisationId +
+//                ", montant=" + montant +
+//                ", date=" + date +
+//                ", user=" + user +
+//                ", organisation=" + organisation +
+//                '}';
+//    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
-    public Organisation getOrganisation() {
-        return organisation;
-    }
 
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation;
-    }
 
 //    public Don(Long id, Long userId, Long organisationId, Double montant, LocalDate date) {
 //        this.id = id;
@@ -51,58 +109,4 @@ public class Don {
 //        this.montant = montant;
 //        this.date = date;
 //    }
-//
-//     Getter and Setter methods for userId and organisationId
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getOrganisationId() {
-        return organisationId;
-    }
-
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getMontant() {
-        return montant;
-    }
-
-    public void setMontant(Double montant) {
-        this.montant = montant;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return "Don{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", organisationId=" + organisationId +
-                ", montant=" + montant +
-                ", date=" + date +
-                ", user=" + user +
-                ", organisation=" + organisation +
-                '}';
-    }
 }

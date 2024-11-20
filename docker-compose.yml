@@ -1,0 +1,148 @@
+services:
+  mysql:
+    image: mysql:9.0.1
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: user-bd
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p" ]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    networks:
+      - charity_platform_network
+  charity-discovery-service:
+    build: ./DiscoveryClientService
+    container_name: charity-discovery-service
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      retries: 4
+    networks:
+      - charity_platform_network
+  charity-config-service:
+    build: ./ConfigService
+    container_name: charity-config-service
+    ports:
+      - '9999:9999'
+    expose:
+      - '9999'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+    depends_on:
+      charity-discovery-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9999/actuator/health" ]
+      interval: 10s
+      retries: 4
+    networks:
+      - charity_platform_network
+  charity-user-service:
+    build: ./UserService
+    container_name: charity-user-service
+    ports:
+      - '8091:8091'
+    expose:
+      - '8091'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+      CONFIG_SERVICE_URL: http://charity-config-service:9999/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user-bd
+    depends_on:
+      charity-config-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8091/actuator/health" ]
+      interval: 10s
+      retries: 5
+    networks:
+      - charity_platform_network
+  charity-don-service:
+    build: ./DonService
+    container_name: charity-don-service
+    ports:
+      - '8092:8092'
+    expose:
+      - '8092'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+      CONFIG_SERVICE_URL: http://charity-config-service:9999/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Don-bd
+    depends_on:
+      charity-user-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8092/actuator/health" ]
+      interval: 10s
+      retries: 5
+    networks:
+      - charity_platform_network
+  charity-organisation-service:
+    build: ./OrganisationService
+    container_name: charity-organisation-service
+    ports:
+      - '8094:8094'
+    expose:
+      - '8094'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+      CONFIG_SERVICE_URL: http://charity-config-service:9999/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Organisation-bd
+    depends_on:
+      charity-config-service:
+        condition: service_healthy
+    networks:
+      - charity_platform_network
+  charity-payment-service:
+    build: ./PaymentService
+    container_name: charity-payment-service
+    ports:
+      - '8093:8093'
+    expose:
+      - '8093'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+      CONFIG_SERVICE_URL: http://charity-config-service:9999/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Payment-bd
+    depends_on:
+      charity-don-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8093/actuator/health" ]
+      interval: 10s
+      retries: 5
+    networks:
+      - charity_platform_network
+  charity-gateway-service:
+    build: ./GatewayService
+    container_name: charity-gateway-service
+    ports:
+      - '8887:8887'
+    expose:
+      - '8887'
+    environment:
+      DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
+      CONFIG_SERVICE_URL: http://charity-config-service:9999/
+    depends_on:
+      charity-config-service:
+        condition: service_healthy
+    networks:
+      - charity_platform_network
+volumes:
+  mysql-data:
+
+networks:
+  charity_platform_network:
+    driver: bridge

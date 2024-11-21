@@ -19,5 +19,12 @@ public class User {
     private String name;
     private String email;
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "Id=" + Id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

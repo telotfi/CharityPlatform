@@ -15,4 +15,16 @@ public class Organisation {
     private String address;
     private boolean isVerified;
 
+    @Override
+    public String toString() {
+        return "Organisation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", isVerified=" + isVerified +
+                '}';
+    }
 }

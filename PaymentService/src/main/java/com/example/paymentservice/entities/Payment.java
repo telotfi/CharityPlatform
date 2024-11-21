@@ -34,4 +34,17 @@ public class Payment {
 //    public Payment(Object o, long l, long l1, PaymentMethod paymentMethod, PaymentStatus paymentStatus, LocalDateTime now) {
 //    }
 
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", donationId=" + donationId +
+                ", method=" + method +
+                ", status=" + status +
+                ", paymentDate=" + paymentDate +
+                ", user=" + user +
+                ", don=" + don +
+                '}';
+    }
 }

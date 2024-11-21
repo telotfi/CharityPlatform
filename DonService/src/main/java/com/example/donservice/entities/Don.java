@@ -86,18 +86,18 @@ public class Don {
 //        this.date = date;
 //    }
 //
-//    @Override
-//    public String toString() {
-//        return "Don{" +
-//                "id=" + id +
-//                ", userId=" + userId +
-//                ", organisationId=" + organisationId +
-//                ", montant=" + montant +
-//                ", date=" + date +
-//                ", user=" + user +
-//                ", organisation=" + organisation +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Don{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", organisationId=" + organisationId +
+                ", montant=" + montant +
+                ", date=" + date +
+                ", user=" + user +
+                ", organisation=" + organisation +
+                '}';
+    }
 
 
 

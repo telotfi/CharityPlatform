@@ -1,12 +1,12 @@
 package com.example.userService.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.userService.models.UserDonDTO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 
 /**
@@ -18,6 +18,8 @@ public class User {
     private Long Id;
     private String name;
     private String email;
+    @Transient // Prevent persistence of this field in the database
+    private List<UserDonDTO> userDonDTOS;
 
     @Override
     public String toString() {
@@ -25,6 +27,7 @@ public class User {
                 "Id=" + Id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", userDonDTOS=" + userDonDTOS +
                 '}';
     }
 }

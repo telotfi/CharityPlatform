@@ -1,7 +1,10 @@
 package com.example.organisationservice.entities;
 
+import com.example.organisationservice.models.DonDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity @Data @AllArgsConstructor @NoArgsConstructor
 public class Organisation {
@@ -14,6 +17,9 @@ public class Organisation {
     private String phoneNumber;
     private String address;
     private boolean isVerified;
+
+    @Transient // To avoid persisting this field
+    private List<DonDTO> dons;
 
     @Override
     public String toString() {

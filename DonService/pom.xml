@@ -112,6 +112,10 @@
             <version>7.0.0.Beta1</version>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

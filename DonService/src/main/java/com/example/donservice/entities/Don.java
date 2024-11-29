@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author abdellah
@@ -19,94 +21,49 @@ public class Don {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long organisationId;  // Reference to Organisation microservice
-    private Double montant;
-    private LocalDate date;
-    @Transient
-    private User user;
+
+    @Column(name = "organisation_id", nullable = false)
+    private Long organisationId;
+
+    private String title;
+    private String description;
+    private double montantToAchieve;
+    private double currentAmount = 0.0;
+    private boolean isAchieved = false;
+
+    @OneToMany(mappedBy = "don", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserDon> userDons = new ArrayList<>();
+
     @Transient
     private Organisation organisation;
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-//
-//    public Organisation getOrganisation() {
-//        return organisation;
-//    }
-//
-//    public void setOrganisation(Organisation organisation) {
-//        this.organisation = organisation;
-//    }
-//
-////
-////     Getter and Setter methods for userId and organisationId
-//    public Long getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(Long userId) {
-//        this.userId = userId;
-//    }
-//
-//    public Long getOrganisationId() {
-//        return organisationId;
-//    }
-//
-//    public void setOrganisationId(Long organisationId) {
-//        this.organisationId = organisationId;
-//    }
-//
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public Double getMontant() {
-//        return montant;
-//    }
-//
-//    public void setMontant(Double montant) {
-//        this.montant = montant;
-//    }
-//
-//    public LocalDate getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(LocalDate date) {
-//        this.date = date;
-//    }
-//
+
+
+    public Don(Long organisationId, String title, String description, double montantToAchieve) {
+        this.organisationId = organisationId;
+        this.title = title;
+        this.description = description;
+        this.montantToAchieve = montantToAchieve;
+        this.currentAmount = 0.0;
+        this.isAchieved = false;
+    }
+
+    public void updateCurrentAmount(double amount) {
+        this.currentAmount += amount;
+        this.isAchieved = this.currentAmount >= this.montantToAchieve;
+    }
+
+
     @Override
     public String toString() {
         return "Don{" +
                 "id=" + id +
-                ", userId=" + userId +
                 ", organisationId=" + organisationId +
-                ", montant=" + montant +
-                ", date=" + date +
-                ", user=" + user +
-                ", organisation=" + organisation +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", montantToAchieve=" + montantToAchieve +
+                ", currentAmount=" + currentAmount +
+                ", userDons=" + userDons +
                 '}';
     }
-
-
-
-
-//    public Don(Long id, Long userId, Long organisationId, Double montant, LocalDate date) {
-//        this.id = id;
-//        this.userId = userId;
-//        this.organisationId = organisationId;
-//        this.montant = montant;
-//        this.date = date;
-//    }
 }

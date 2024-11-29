@@ -11,9 +11,9 @@ import java.util.List;
 /**
  * @author abdellah
  **/
-@FeignClient(name = "OrganisationService")
+@FeignClient(name = "OrganisationService" ,path = "/api/organisations")
 public interface OrganisationRestClient {
-    @GetMapping(path = "/organisations/{id}")
+    @GetMapping(path = "/{id}")
     @CircuitBreaker(name = "organisationService",fallbackMethod = ("getOrgaByid"))
     Organisation getOrganisationById(@PathVariable(name = "id") Long id);
 

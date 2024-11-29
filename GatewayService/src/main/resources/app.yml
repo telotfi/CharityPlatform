@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: http://localhost:8091  # The actual service URL
+          predicates:
+            - Path=/USERSERVICE/**  # Matches the incoming request path

@@ -2,6 +2,7 @@ package com.example.donservice.entities;
 
 import com.example.donservice.models.Organisation;
 import com.example.donservice.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,21 +32,21 @@ public class Don {
     private double currentAmount = 0.0;
     private boolean isAchieved = false;
 
-    @OneToMany(mappedBy = "don", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "don", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserDon> userDons = new ArrayList<>();
 
     @Transient
     private Organisation organisation;
 
 
-
-    public Don(Long organisationId, String title, String description, double montantToAchieve) {
+    public Don(Long organisationId, String title, String description, double montantToAchieve, double currentAmount, boolean isAchieved) {
         this.organisationId = organisationId;
         this.title = title;
         this.description = description;
         this.montantToAchieve = montantToAchieve;
-        this.currentAmount = 0.0;
-        this.isAchieved = false;
+        this.currentAmount = currentAmount;
+        this.isAchieved = isAchieved;
     }
 
     public void updateCurrentAmount(double amount) {
@@ -63,7 +64,8 @@ public class Don {
                 ", description='" + description + '\'' +
                 ", montantToAchieve=" + montantToAchieve +
                 ", currentAmount=" + currentAmount +
-                ", userDons=" + userDons +
-                '}';
+                ", isAchieved=" + isAchieved +
+                '}'; // Avoid userDons here
     }
+
 }

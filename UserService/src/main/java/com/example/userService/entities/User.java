@@ -14,17 +14,22 @@ import java.util.List;
  **/
 @Entity @Data @AllArgsConstructor @NoArgsConstructor
 public class User {
-    @Id
-    private Long Id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String email;
     @Transient // Prevent persistence of this field in the database
     private List<UserDonDTO> userDonDTOS;
 
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "Id=" + Id +
+                "Id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", userDonDTOS=" + userDonDTOS +

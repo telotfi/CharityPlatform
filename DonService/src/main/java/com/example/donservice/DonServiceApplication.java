@@ -2,18 +2,20 @@ package com.example.donservice;
 
 import com.example.donservice.config.*;
 import com.example.donservice.entities.Don;
+import com.example.donservice.entities.UserDon;
 import com.example.donservice.feign.UserRestClient;
 import com.example.donservice.repositories.DonRepository;
+import com.example.donservice.repositories.UserDonRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -24,28 +26,30 @@ public class DonServiceApplication {
         SpringApplication.run(DonServiceApplication.class, args);
     }
     @Bean
-    CommandLineRunner start(DonRepository donRepository, RepositoryRestConfiguration restConfiguration, UserRestClient userRestClient) {
-        restConfiguration.exposeIdsFor(Don.class);
+    CommandLineRunner start(DonRepository donRepository, UserDonRepository userDonRepository) {
         return args -> {
-//            Don don = new Don(null,1L,1L,2999.0, LocalDate.now());
-//            Don don2 = new Don(null,2L,2L,5000.0,LocalDate.now());
-//            Don don3 = new Don(null,3L,3L,250.0,LocalDate.now());
-//            donRepository.save(don);
-//            donRepository.save(don2);
-//            donRepository.save(don3);
-            //UserRepository.save(new User(null, "MOHAMAD","MOHAMAD@gmail.com"));
-            //donRepository.save(new Don(null, 1L, 99.0, LocalDate.now()));
-//            donRepository.save(new Don(null, 2L, 199.0, LocalDate.now()));
-//            User user1 = new User();
-//            User user2 = userRestClient.getUserById(5L);
-//            Organisation organisation =new Organisation();
-//            Don don1 =new Don(null, 2L, 1L, 299.0, LocalDate.now(),user2,organisation);
+//            Don don1 = new Don( 1L, "Donation A", "Description A", 5000.0, 0.0, false);
 //            donRepository.save(don1);
-//            //donRepository.save(new Don(null, 3L, 2L, 199.0, LocalDate.now()));
-//            System.out.println(user2.toString());
-            //donRepository.save(new Don(null,5L,3L,999d,LocalDate.now()));
+            // Create test UserDon entries
+//            UserDon userDon1 = new UserDon();
+//            userDon1.setDon(donRepository.findById(1L).get());
+//            userDon1.setUserId(1L); // Replace with actual user ID
+//            userDon1.setAmount(200.00);
+//            userDon1.setLocalDate(LocalDate.now());
+//            userDonRepository.save(userDon1);
+//
+//            UserDon userDon2 = new UserDon();
+//            userDon2.setDon(donRepository.findById(1L).get());
+//            userDon2.setUserId(2L); // Replace with actual user ID
+//            userDon2.setAmount(300.00);
+//            userDon2.setLocalDate(LocalDate.now());
+//            userDonRepository.save(userDon2);
+
             donRepository.findAll().forEach(c -> {
                 System.out.println(c.toString());
+            });
+            userDonRepository.findAll().forEach(userDon -> {
+                System.out.println(userDon.toString());
             });
 
         };

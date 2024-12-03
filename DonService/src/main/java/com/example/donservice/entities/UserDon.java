@@ -31,5 +31,14 @@ public class UserDon {
     @Transient
     private User user;
 
-
+    @Override
+    public String toString() {
+        return "UserDon{" +
+                "id=" + id +
+                ", don=" + don +
+                ", userId=" + userId +
+                ", amount=" + amount +
+                ", localDate=" + localDate +
+                '}';
+    }
 }

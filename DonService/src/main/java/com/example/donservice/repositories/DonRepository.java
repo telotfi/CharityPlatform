@@ -2,13 +2,10 @@ package com.example.donservice.repositories;
 
 import com.example.donservice.entities.Don;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author abdellah
@@ -22,12 +19,12 @@ public interface DonRepository extends JpaRepository<Don, Long> {
 
     List<Don> findByCurrentAmountGreaterThan(double amount);
 
-    @Query("SELECT d FROM Don d ORDER BY (d.montantToAchieve - d.currentAmount) ASC")
-    List<Don> findAllOrderByRemainingAmount();
+//    @Query("SELECT d FROM Don d ORDER BY (d.montantToAchieve - d.currentAmount) ASC")
+//    List<Don> findAllOrderByRemainingAmount();
 
     //Finding Progress of a Donation
-    @Query("SELECT (d.currentAmount / d.montantToAchieve) * 100 FROM Don d WHERE d.id = :donId")
-    Optional<Double> findDonationProgress(@Param("donId") Long donId);
+//    @Query("SELECT (d.currentAmount / d.montantToAchieve) * 100 FROM Don d WHERE d.id = :donId")
+//    Optional<Double> findDonationProgress(@Param("donId") Long donId);
 
 
 }

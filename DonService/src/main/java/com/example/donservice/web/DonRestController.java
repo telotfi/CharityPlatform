@@ -62,6 +62,10 @@
 
 package com.example.donservice.web;
 
+import com.example.donservice.dtos.DonDTO;
+import com.example.donservice.dtos.DonOrgaDTO;
+import com.example.donservice.dtos.UserDonDTO;
+import com.example.donservice.dtos.UserDonDTOUSER;
 import com.example.donservice.entities.Don;
 import com.example.donservice.entities.UserDon;
 import com.example.donservice.feign.OrganisationRestClient;
@@ -74,6 +78,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.example.donservice.feign.OrganisationRestClient.logger;
 
 /**
  * @author
@@ -96,33 +103,62 @@ public class DonRestController {
 
     // Get all Dons with Organisation and User details
     @GetMapping
-    public ResponseEntity<List<Don>> getAllDons() {
+    public ResponseEntity<List<DonDTO>> getAllDons() {
         List<Don> dons = donService.getAllDons();
         dons.forEach(this::enrichDonDetails); // Enrich each Don with Organisation and User details
-        return ResponseEntity.ok(dons);
+        List<DonDTO> donDTOs = dons.stream()
+                .map(this::toDonDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(donDTOs);
     }
 
     // Get a single Don by ID with Organisation and User details
     @GetMapping("/{id}")
-    public ResponseEntity<Don> getDonById(@PathVariable Long id) {
+    public ResponseEntity<DonDTO> getDonById(@PathVariable Long id) {
         Don don = donService.getDonById(id);
         enrichDonDetails(don);
-        return ResponseEntity.ok(don);
+        DonDTO donDTO = toDonDTO(don);
+//        Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
+//        don.setOrganisation(organisation != null ? organisation : new Organisation());
+//        DonDTO donDTO = toDonDTO(don);
+        return ResponseEntity.ok(donDTO);
     }
 
-    // Get all Dons for a specific Organisation
     @GetMapping("/organisation/{organisationId}")
-    public ResponseEntity<List<Don>> getDonsByOrganisation(@PathVariable Long organisationId) {
+    public ResponseEntity<List<DonOrgaDTO>> getDonsByOrganisation(@PathVariable Long organisationId) {
         List<Don> dons = donService.getDonsByOrganisation(organisationId);
-        dons.forEach(this::enrichDonDetails);
-        return ResponseEntity.ok(dons);
+        List<DonOrgaDTO> donDTOs = dons.stream()
+                .map(this::toDonOrgaDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(donDTOs);
     }
+
 
     // Enrich a Don with Organisation and User details
+//    private void enrichDonDetails(Don don) {
+//        Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
+//        don.setOrganisation(organisation != null ? organisation : new Organisation());
+//
+//        // Enrich User details for UserDon objects if present
+//        if (don.getUserDons() != null) {
+//            don.getUserDons().forEach(userDon -> {
+//                User user = userRestClient.getUserById(userDon.getUserId());
+//                userDon.setUser(user != null ? user : new User());
+//            });
+//        }
+//    }
     private void enrichDonDetails(Don don) {
         Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
+
+        // Check if the organisation is the default fallback one
+        if (organisation.getName().equals("Not Available")) {
+
+            logger.warn("Fallback organisation for Don with ID: {}", don.getId());
+        }
+
         don.setOrganisation(organisation != null ? organisation : new Organisation());
 
+        // Enrich User details for UserDon objects if present
         if (don.getUserDons() != null) {
             don.getUserDons().forEach(userDon -> {
                 User user = userRestClient.getUserById(userDon.getUserId());
@@ -130,6 +166,45 @@ public class DonRestController {
             });
         }
     }
+
+
+    private DonDTO toDonDTO(Don don) {
+        DonDTO donDTO = new DonDTO();
+        donDTO.setId(don.getId());
+        donDTO.setOrganisationId(don.getOrganisationId());
+        donDTO.setTitle(don.getTitle());
+        donDTO.setDescription(don.getDescription());
+        donDTO.setMontantToAchieve(don.getMontantToAchieve());
+        donDTO.setCurrentAmount(don.getCurrentAmount());
+        donDTO.setAchieved(don.isAchieved());
+        donDTO.setOrganisation(don.getOrganisation());
+
+        List<UserDonDTO> userDonDTOS = don.getUserDons().stream()
+                .map(userDon -> new UserDonDTO(
+                        userDon.getId(),
+                        userDon.getAmount(),
+                        userDon.getLocalDate(),
+                        userDon.getUser()
+                ))
+                .collect(Collectors.toList());
+
+        donDTO.setUserDonDTOS(userDonDTOS);
+
+        return donDTO;
+    }
+
+    private DonOrgaDTO toDonOrgaDTO(Don don) {
+        return new DonOrgaDTO(
+                don.getId(),
+                don.getOrganisationId(),
+                don.getTitle(),
+                don.getDescription(),
+                don.getMontantToAchieve(),
+                don.getCurrentAmount(),
+                don.isAchieved()
+        );
+    }
+
 
     // Add a User Donation to a Don
     @PostMapping("/{donId}/user-donations")
@@ -144,8 +219,19 @@ public class DonRestController {
     }
 
     @GetMapping("/user-dons/{userId}")
-    public List<UserDon> getUserDonsByUserId(@PathVariable Long userId) {
-        return userDonRepository.findByUserId(userId);
+    public List<UserDonDTOUSER> getUserDonsByUserId(@PathVariable Long userId) {
+        List<UserDon> userDonList= userDonRepository.findByUserId(userId);
+        List<UserDonDTOUSER> userDonDTOList = userDonList.stream()
+                .map(userDon -> new UserDonDTOUSER(
+                        userDon.getId(),
+                        organisationRestClient.getOrganisationById(userDon.getDon().getOrganisationId()).getName(),
+                        userDon.getDon().getTitle(),
+                        userDon.getAmount(),
+                        userDon.getLocalDate()
+                ))
+                .collect(Collectors.toList());
+
+        return userDonDTOList;
     }
     // Archive Achieved Donations
     @PostMapping("/archive-achieved")

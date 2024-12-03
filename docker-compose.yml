@@ -57,7 +57,7 @@ services:
     environment:
       DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
       CONFIG_SERVICE_URL: http://charity-config-service:9999/
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/user-bd
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/User-db?createDatabaseIfNotExist=true
     depends_on:
       charity-config-service:
         condition: service_healthy
@@ -79,7 +79,7 @@ services:
     environment:
       DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
       CONFIG_SERVICE_URL: http://charity-config-service:9999/
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Don-bd
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Don-db?createDatabaseIfNotExist=true
     depends_on:
       charity-user-service:
         condition: service_healthy
@@ -99,7 +99,7 @@ services:
     environment:
       DISCOVERY_SERVICE_URL: http://charity-discovery-service:8761/eureka/
       CONFIG_SERVICE_URL: http://charity-config-service:9999/
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Organisation-bd
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Organisation-db?createDatabaseIfNotExist=true
     depends_on:
       charity-config-service:
         condition: service_healthy
@@ -140,6 +140,13 @@ services:
         condition: service_healthy
     networks:
       - charity_platform_network
+  front-end-angular:
+    build: ./angular-frontend
+    container_name: front-end-angular
+    ports:
+      - '80:80'
+    expose:
+      - '80'
 volumes:
   mysql-data:
 

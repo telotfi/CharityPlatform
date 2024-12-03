@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * @author abdellah
  **/
-@FeignClient(name = "DonService", path = "/api/user-dons")
+@FeignClient(name = "DonService", path = "/api/dons")
 public interface UserDonFeignClient {
-    @GetMapping("/{userId}")
+    @GetMapping("/user-dons/{userId}")
     List<UserDonDTO> getUserDonsByUserId(@PathVariable Long userId);
 }

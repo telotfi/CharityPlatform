@@ -30,4 +30,17 @@ public class UserService {
         user.setUserDonDTOS(userDonDTOS);
         return user;
     }
+
+    public List<User> getAllUsers(){
+        List<User> usersList = userRepository.findAll();
+        usersList.forEach(user -> {
+            user.setUserDonDTOS(userDonFeignClient.getUserDonsByUserId(user.getId()));
+        });
+        return usersList;
+    }
+    public User getUserById(Long id){
+        User user = userRepository.findById(id).get();
+        user.setUserDonDTOS(userDonFeignClient.getUserDonsByUserId(user.getId()));
+        return user;
+    }
 }

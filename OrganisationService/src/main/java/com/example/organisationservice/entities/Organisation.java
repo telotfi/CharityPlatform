@@ -21,6 +21,16 @@ public class Organisation {
     @Transient // To avoid persisting this field
     private List<DonDTO> dons;
 
+    public Organisation(Long id, String name, String description, String contactEmail, String phoneNumber, String address, boolean isVerified) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.contactEmail = contactEmail;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.isVerified = isVerified;
+    }
+
     @Override
     public String toString() {
         return "Organisation{" +

@@ -18,7 +18,7 @@ public class User {
     private Long id;
     private String name;
     private String email;
-    @Transient // Prevent persistence of this field in the database
+    @Transient
     private List<UserDonDTO> userDonDTOS;
 
     public User(String name, String email) {

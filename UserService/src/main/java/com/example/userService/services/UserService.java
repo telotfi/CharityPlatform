@@ -43,4 +43,10 @@ public class UserService {
         user.setUserDonDTOS(userDonFeignClient.getUserDonsByUserId(user.getId()));
         return user;
     }
+
+    public User createUser(User user) {
+        userRepository.save(user);
+        return user;
+    }
+
 }

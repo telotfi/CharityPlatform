@@ -37,6 +37,12 @@ public class OrganisationService {
 
         return organisation;
     }
+    public Organisation findByIdtoEdit(Long id) {
+        return organisationRepository.findById(id)
+                .orElse(null); // Handle null in the controller for meaningful errors
+    }
+
+
 
 //    public List<Organisation> findAll() {
 //        List<Organisation> organisations = organisationRepository.findAll();
@@ -75,17 +81,7 @@ private static final Logger logger = LoggerFactory.getLogger(OrganisationService
         return organisationRepository.save(organisation);
     }
 
-    @Transactional
-    public Organisation update(Long id, Organisation updatedOrganisation) {
-        Organisation existingOrganisation = findById(id);
-        existingOrganisation.setName(updatedOrganisation.getName());
-        existingOrganisation.setDescription(updatedOrganisation.getDescription());
-        existingOrganisation.setContactEmail(updatedOrganisation.getContactEmail());
-        existingOrganisation.setPhoneNumber(updatedOrganisation.getPhoneNumber());
-        existingOrganisation.setAddress(updatedOrganisation.getAddress());
-        existingOrganisation.setVerified(updatedOrganisation.isVerified());
-        return organisationRepository.save(existingOrganisation);
-    }
+
 
     @Transactional
     public void delete(Long id) {

@@ -43,10 +43,33 @@ public class OrganisationController {
 
     // Update an existing organisation
     @PutMapping("/{id}")
-    public ResponseEntity<Organisation> updateOrganisation(@PathVariable Long id, @RequestBody Organisation updatedOrganisation) {
-        Organisation organisation = organisationService.update(id, updatedOrganisation);
-        return ResponseEntity.ok(organisation);
+    public ResponseEntity<?> updateOrganisation(@PathVariable Long id, @RequestBody Organisation updatedOrganisation) {
+        Organisation existingOrganisation = organisationService.findByIdtoEdit(id);
+        if (existingOrganisation == null) {
+            return ResponseEntity.status(404).body("Organisation not found.");
+        }
+        // Update the fields of the existing organisation
+        if (updatedOrganisation.getName() != null) {
+            existingOrganisation.setName(updatedOrganisation.getName());
+        }
+        if (updatedOrganisation.getDescription() != null) {
+            existingOrganisation.setDescription(updatedOrganisation.getDescription());
+        }
+        if (updatedOrganisation.getAddress() != null) {
+            existingOrganisation.setAddress(updatedOrganisation.getAddress());
+        }
+        if (updatedOrganisation.getContactEmail() != null) {
+            existingOrganisation.setContactEmail(updatedOrganisation.getContactEmail());
+        }
+        if (updatedOrganisation.getPhoneNumber() != null) {
+            existingOrganisation.setPhoneNumber(updatedOrganisation.getPhoneNumber());
+        }
+
+
+        Organisation savedOrganisation = organisationService.save(existingOrganisation);
+        return ResponseEntity.ok(savedOrganisation);
     }
+
 
     // Delete an organisation
     @DeleteMapping("/{id}")

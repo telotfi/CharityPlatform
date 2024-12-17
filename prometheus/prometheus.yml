@@ -1,0 +1,50 @@
+global:
+  scrape_interval: 3s  # How often Prometheus scrapes targets by default.
+
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']  # Prometheus server
+
+  # Scrape Discovery Service
+  - job_name: 'charity-discovery-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8761']
+
+  # Scrape Config Service
+  - job_name: 'charity-config-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:9999']
+
+  # Scrape User Service
+  - job_name: 'charity-user-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8091']
+
+  # Scrape Don Service
+  - job_name: 'charity-don-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8092']
+
+  # Scrape Payment Service
+  - job_name: 'charity-payment-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8093']
+
+  # Scrape Organisation Service
+  - job_name: 'charity-organisation-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8094']
+
+  # Scrape Gateway Service
+  - job_name: 'charity-gateway-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8887']

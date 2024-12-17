@@ -95,7 +95,6 @@
 //}
 package com.example.donservice.services;
 
-import com.example.donservice.dtos.UserDonDTO;
 import com.example.donservice.entities.Don;
 import com.example.donservice.entities.UserDon;
 import com.example.donservice.exception.DonNotFoundException;
@@ -105,6 +104,8 @@ import com.example.donservice.repositories.DonRepository;
 import com.example.donservice.repositories.UserDonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,6 +132,11 @@ public class DonService {
     public Don getDonById(Long id) {
         return donRepository.findById(id)
                 .orElseThrow(() -> new DonNotFoundException("Don with ID " + id + " not found"));
+    }
+
+    public UserDon getUserDonById(Long id) {
+        return userDonRepository.findById(id)
+                .orElseThrow(() -> new DonNotFoundException("UserDon with ID " + id + " not found"));
     }
 
     public Don createDon(Don don) {
@@ -190,5 +196,23 @@ public class DonService {
         return don;
     }
 
+
+    public void handleDonation(Long donationId, Long userId, double amount) {
+        Don don = donRepository.findById(donationId)
+                .orElseThrow(() -> new RuntimeException("Don not found with id: " + donationId));
+
+        // Simulate user donation and update don
+        UserDon userDon = new UserDon();
+        userDon.setDon(don);
+        userDon.setUserId(userId);
+        userDon.setAmount(amount); // Example: full payment
+        userDon.setLocalDate(LocalDate.now());
+
+        userDonRepository.save(userDon);
+
+        // Update Don's current amount and achievement status
+        don.updateCurrentAmount(userDon.getAmount());
+        donRepository.save(don);
+    }
 
 }

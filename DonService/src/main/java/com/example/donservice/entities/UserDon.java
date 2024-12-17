@@ -20,11 +20,9 @@ import java.time.LocalDate;
 public class UserDon {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "don_id", nullable = false)
     private Don don;
-
     private Long userId;
     private double amount;
     private LocalDate localDate;

@@ -1,65 +1,3 @@
-//package com.example.donservice.web;
-//
-//import com.example.donservice.entities.Don;
-//import com.example.donservice.feign.OrganisationRestClient;
-//import com.example.donservice.feign.UserRestClient;
-//import com.example.donservice.models.Organisation;
-//import com.example.donservice.models.User;
-//import com.example.donservice.repositories.DonRepository;
-//import org.springframework.cloud.openfeign.EnableFeignClients;
-//import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-///**
-// * @author abdellah
-// **/
-//@RestController
-//public class DonRestController  {
-//    private DonRepository donRepository;
-//    private UserRestClient userRestClient;
-//    private OrganisationRestClient organisationRestClient;
-//
-//    public DonRestController(DonRepository donRepository, UserRestClient userRestClient, OrganisationRestClient organisationRestClient) {
-//        this.donRepository = donRepository;
-//        this.userRestClient = userRestClient;
-//        this.organisationRestClient = organisationRestClient;
-//    }
-//    @GetMapping(path = "/dons/{id}")
-//    public Don getDon(@PathVariable Long id){
-//        Don don = donRepository.findById(id).orElseThrow(() ->
-//                new ResourceNotFoundException("Don with id " + id + " not found"));
-//
-//        User user = userRestClient.getUserById(don.getUserId());
-//        don.setUser(user != null ? user : new User());
-//
-//        Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
-//        don.setOrganisation(organisation != null ? organisation : new Organisation());
-//        return don;
-//    }
-//    @GetMapping(path = "/dons")
-//    public List<Don> donsList(){
-//        // Use a lambda to set the user and organisation for each donation
-//        List<Don> dons = donRepository.findAll();
-//        dons.forEach(don -> {
-//            User user = userRestClient.getUserById(don.getUserId());
-//            don.setUser(user != null ? user : new User());
-//
-//            Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
-//            don.setOrganisation(organisation != null ? organisation : new Organisation());
-//        });
-////        donRepository.findAll().forEach(don -> {
-////            don.setUser(userRestClient.getUserById(don.getUserId()));
-////            don.setOrganisation(organisationRestClient.getOrganisationById(don.getOrganisationId()));
-////        });
-//        return donRepository.findAll();
-//    }
-//}
-
 package com.example.donservice.web;
 
 import com.example.donservice.dtos.DonDTO;
@@ -124,6 +62,9 @@ public class DonRestController {
         return ResponseEntity.ok(donDTO);
     }
 
+
+
+
     @GetMapping("/organisation/{organisationId}")
     public ResponseEntity<List<DonOrgaDTO>> getDonsByOrganisation(@PathVariable Long organisationId) {
         List<Don> dons = donService.getDonsByOrganisation(organisationId);
@@ -134,19 +75,7 @@ public class DonRestController {
     }
 
 
-    // Enrich a Don with Organisation and User details
-//    private void enrichDonDetails(Don don) {
-//        Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
-//        don.setOrganisation(organisation != null ? organisation : new Organisation());
-//
-//        // Enrich User details for UserDon objects if present
-//        if (don.getUserDons() != null) {
-//            don.getUserDons().forEach(userDon -> {
-//                User user = userRestClient.getUserById(userDon.getUserId());
-//                userDon.setUser(user != null ? user : new User());
-//            });
-//        }
-//    }
+
     private void enrichDonDetails(Don don) {
         Organisation organisation = organisationRestClient.getOrganisationById(don.getOrganisationId());
 
